@@ -1,6 +1,6 @@
 const { NotImplementedError } = require('../extensions/index.js');
 
-// const { Node } = require('../extensions/list-tree.js');
+const { Node } = require('../extensions/list-tree.js');
 
 /**
 * Implement simple binary search tree according to task description
@@ -8,42 +8,120 @@ const { NotImplementedError } = require('../extensions/index.js');
 */
 class BinarySearchTree {
 
-  root() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-  }
+    constructor() {
+        this.rootTree = null;
+    }
 
-  add(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-  }
+    root() {
+        return this.rootTree;
+    }
 
-  has(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-  }
+    add(data) {
+        let node = rootTree => {
+            if (rootTree === null) {
+                this.rootTree = new Node(data);
+            } else if (data < rootTree.data) {
+                if (rootTree.left === null) {
+                    rootTree.left = new Node(data);
+                } else {
+                    node(rootTree.left);
+                }
+            } else if (data > rootTree.data) {
+                if (rootTree.right === null) {
+                    rootTree.right = new Node(data);
+                } else {
+                    node(rootTree.right);
+                }
+            }
+        }
+        node(this.rootTree);
+    }
 
-  find(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-  }
 
-  remove(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-  }
+    has(data) {
+        return this.find(data) !== null;
+    }
 
-  min() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-  }
+    find(data) {
+        if (this.rootTree === null) {
+            return null;
+        }
 
-  max() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-  }
+        let node = this.rootTree;
+
+        if (node.data === data) {
+            return node;
+        } else {
+            while (node) {
+                if (node.data === data) {
+                    return node;
+                }
+                else {
+                    if (data < node.data) {
+                        node = node.left;
+                    } else {
+                        node = node.right;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    remove(data) {
+        this.rootTree = removeTree(this.rootTree, data);
+
+        function removeTree(node, data) {
+            if (!node) {
+                return null;
+            } else if (data < node.data) {
+                node.left = removeTree(node.left, data);
+                return node;
+            } else if (data > node.data) {
+                node.right = removeTree(node.right, data);
+                return node;
+            } else {
+                if ((!node.left) && (!node.right)) {
+                    return null;
+                } else if (!node.left) {
+                    node = node.right;
+                    return node;
+                } else if (!node.right) {
+                    node = node.left;
+                    return node;
+                }
+
+                let min = node.right;
+
+                while (min.left) {
+                    min = min.left;
+                }
+
+                node.data = min.data;
+                node.right = removeTree(node.right, min.data);
+
+                return node;
+            }
+        }
+    }
+
+    min() {
+        let node = this.rootTree;
+        while (node.left !== null) {
+            node = node.left;
+        }
+        return node.data;
+    }
+
+    max() {
+        let node = this.rootTree;
+        while (node.right !== null) {
+            node = node.right;
+        }
+        return node.data;
+    }
 }
 
 module.exports = {
-  BinarySearchTree
+    BinarySearchTree
 };
